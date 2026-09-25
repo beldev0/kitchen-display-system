@@ -79,7 +79,7 @@ router.post('', (req, res) => {
 
 // Handle order status updating
 
-router.patch('/changeStatus/:id', (req, res) => {
+router.patch('/:id/status', (req, res) => {
     let order = currentOrders.find(order => order.id == req.params.id)
     if (!order) {
         return res.status(404).json({"error":[`Order : ${req.params.id} not found`]})

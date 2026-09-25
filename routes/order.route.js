@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const validStatus = ["en_attente", "en_preparation", "servee"]
 
 let currentOrders = [
     {
@@ -68,11 +69,32 @@ router.post('', (req, res) => {
     if (isNaN(table)) {
         return res.status(400).json({"error": "Table number are invalid"})
     }
-    newOrder.id = currentOrders.length ? currentOrders.at(-1).id : 1
+    newOrder.id = currentOrders.length ? currentOrders.at(-1).id + 1 : 1
+
     newOrder.created_at = new Date()
     newOrder.status = 'en_attente'
     currentOrders.push(newOrder)
     return res.status(201).json(newOrder)
+})
+
+// Handle order status updating
+
+router.patch('/changeStatus/:id', (req, res) => {
+    let order = currentOrders.find(order => order.id == req.params.id)
+    if (!order) {
+        return res.status(404).json({"error":[`Order : ${req.params.id} not found`]})
+    }
+    const { status } = req.body
+    if(!status) {
+        return res.status(400).json({"error":["The new status is required"]})
+    }
+
+    if(!validStatus.includes(status)) {
+        return res.status(400).json({"error": `${status} is an invalid status`})
+    }
+
+    order.status = status
+    return res.status(200).json(order)
 })
 
 

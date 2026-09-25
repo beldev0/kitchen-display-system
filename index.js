@@ -7,4 +7,9 @@ app.use(express.json())
 
 app.use('/orders', orderRouteHandler)
 
+app.use('/{*any}', (req, res, next) => {
+    res.status(404).json({"error": ["Oups ! URL not found."]})
+    next()
+})
+
 app.listen(3000)

@@ -40,4 +40,40 @@ router.get('/:id', (req, res) => {
     return res.json({ "error": `Order ${orderId} not found` })
 })
 
+// handle delete method
+
+router.delete('/:id', (req, res) => {
+    const orderId = req.params.id
+    const order = currentOrders.find(order => order.id == orderId)
+    if(!order) {
+        return res.json(400).json({"error": [`No order n°: ${orderId} found`]})
+    } else {
+        currentOrders = currentOrders.filter(order => order.id != orderId)
+        res.sendStatus(204)
+    }
+})
+
+// handle new order creation
+
+router.post('', (req, res) => {
+    let newOrder = req.body
+    if(!newOrder) {
+        return res.status(400).json({"error": ["New order information are required"]})
+    }
+    
+    if(!newOrder.table || !newOrder.items.length) {
+        return res.status(400).json({"error": ["Both table and items are required"]})
+    }
+    let table = new Number(newOrder.table)
+    if (isNaN(table)) {
+        return res.status(400).json({"error": "Table number are invalid"})
+    }
+    newOrder.id = currentOrders.length ? currentOrders.at(-1).id : 1
+    newOrder.created_at = new Date()
+    newOrder.status = 'en_attente'
+    currentOrders.push(newOrder)
+    return res.status(201).json(newOrder)
+})
+
+
 module.exports = router

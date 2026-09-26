@@ -58,6 +58,13 @@ It is a simple Kitchen Display System (KDS) API that exposes endpoints to manage
 
 ---
 
+### Repository structure
+
+* **`main`** : Initial branch. Code without structure
+* **`tiers-architecture`** : First refactoring passed from zero strucuture to n-tiers architecture(controller/service/repository/) 
+
+--- 
+
 ## Tech Stack
 
 * **Runtime:** Node.js
